@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ERROR 404 - HACKER'S REALM</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Matrix Rain Canvas */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -2;
+        }
+
+        /* Grid Overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0,255,0,0.05) 2px, transparent 2px),
+                              linear-gradient(90deg, rgba(0,255,0,0.05) 2px, transparent 2px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Hacker Text Effect */
+        h1 {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            animation: glitch 1s infinite, pulse 2s infinite;
+            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+        }
+
+        p {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            opacity: 0.8;
+            max-width: 70vw;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .code-terminal {
+            font-family: monospace;
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff00;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            min-height: 80px;
+            overflow: hidden;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            background: #00ff00;
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Button Styling */
+        .btn {
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, #00ff00, transparent);
+            transform: skewX(-30deg);
+        }
+
+        .btn:hover::before {
+            animation: shimmer 1s forwards;
+        }
+
+        .btn:hover {
+            background: #00ff00;
+            color: #000;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Glitch Animation */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- Grid Overlay -->
+    <div class="grid-overlay"></div>
+
+    <!-- Content Container -->
+    <div class="container">
+        <h1>404 ERROR</h1>
+        <p>You've entered restricted zone.</p>
+        <p>Your IP has been logged. Unauthorized access detected.</p>
+
+        <!-- Code Terminal Typing Effect -->
+        <div class="code-terminal" id="terminal">
+            [HACKING INITIATED] Scanning vulnerabilities...
+            <span class="cursor"></span>
+        </div>
+
+        <!-- Return Button -->
+        <button class="btn" onclick="window.history.back()">RETURN TO MAINFRAME</button>
+    </div>
+
+    <!-- Script: Matrix Rain + Typing Effect -->
+    <script>
+        // Matrix Rain Setup
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters = 'アァイィウヴエカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array.from({ length: columns }, () => 1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 33);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Typing Effect for Terminal Text
+        const terminalText = [
+            "[!] Connection failed.",
+            "[ERROR] File not found.",
+            "Trace route initiated...",
+            "System integrity compromised.",
+            "Fallback protocol activated."
+        ];
+
+        let currentLineIndex = 0;
+        let currentCharIndex = 0;
+        const terminalDiv = document.getElementById('terminal');
+        const cursor = document.querySelector('.cursor');
+
+        function typeLine() {
+            if (currentCharIndex < terminalText[currentLineIndex].length) {
+                terminalDiv.textContent = terminalText[currentLineIndex].substring(0, currentCharIndex + 1);
+                currentCharIndex++;
+                setTimeout(typeLine, 50);
+            } else {
+                setTimeout(() => {
+                    currentCharIndex = 0;
+                    currentLineIndex = (currentLineIndex + 1) % terminalText.length;
+                    setTimeout(typeLine, 500);
+                }, 2000);
+            }
+        }
+
+        typeLine();
+    </script>
+</body>
+</html>
